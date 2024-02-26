@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "dependencies": {
+    "puppeteer": "^21.8.0"
+  },
+  "name": "snap_shot",
+  "main": "Snap_Shot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

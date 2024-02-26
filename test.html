@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OneDrive File Picker</title>
+  <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.17.0/js/msal-browser.min.js"></script>
+</head>
+<body>
+
+<button onclick="pickFile()">Open OneDrive</button>
+
+<script>
+const msalConfig = {
+  auth: {
+    clientId: 'YOUR_CLIENT_ID',
+    authority: 'https://login.microsoftonline.com/YOUR_TENANT_ID',
+    redirectUri: 'http://localhost:8080', // Replace with your redirect URI
+  }
+};
+
+const msalInstance = new Msal.PublicClientApplication(msalConfig);
+
+async function signIn() {
+  try {
+    const loginResponse = await msalInstance.loginPopup();
+    console.log('Login Response:', loginResponse);
+    return loginResponse;
+  } catch (error) {
+    console.error('Error during login:', error);
+  }
+}
+
+async function pickFile() {
+  const accessToken = await getAccessToken();
+  
+  if (accessToken) {
+    // Use the accessToken to call Microsoft Graph API to pick a file from OneDrive
+    // For simplicity, this example doesn't include the actual API call.
+    console.log('Access Token:', accessToken);
+
+    // Replace the following line with your own logic to open a file from OneDrive
+    alert('Implement your logic to open a file from OneDrive here!');
+  } else {
+    console.error('Access token not available.');
+  }
+}
+
+async function getAccessToken() {
+  const account = msalInstance.getActiveAccount();
+
+  if (!account) {
+    await signIn();
+  }
+
+  try {
+    const authResponse = await msalInstance.acquireTokenSilent({
+      scopes: ['user.read', 'files.read'],
+      account: account
+    });
+    return authResponse.accessToken;
+  } catch (error) {
+    console.error('Error acquiring access token:', error);
+    if (error.name === 'InteractionRequiredAuthError') {
+      // User interaction is required
+      await signIn();
+    }
+  }
+}
+</script>
+
+</body>
+</html>
